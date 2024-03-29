@@ -1,0 +1,10 @@
+Hello this file can be executed via a Brainfuck compiler and my RBF interpreter because this is cross compatible be careful because Brainfuck can only handle 256 values so it might break there
+
+input # get one char from user and save it on the current index equivalent to "," in brainfuck #
+prnt # print ascii value of current index (equivelent to "." in brainfuck) #
+
+goto 1; set 10; goto 0 # move right (goto 1) and set that index to 10 then go back (goto 0) (equivalent to >++++++++++<) #
+prnt !1; prnt # (print ascii of newline then print ascii of index 0) so it matches what brainfuck does because rbf uses readchar and of course it has no echo #
+prnt !1 # print a new line (!1 is 10 which is ascii of new line) equivalent to >. #
+
+you probably noticed theres no commas and minus (in the word "cross compatible" in my texts so i dont break it)

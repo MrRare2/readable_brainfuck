@@ -1,0 +1,11 @@
+GOTO 1 # go to index 1 [0, here, ...]
+SET 69 # set index 1 to 69 [0, 69, ...]
+GOTO 0 # go to index 0 [here, 69, ...]
+SET 10 # set index 0 to 10 [10, 69, ...]
+GOTO 3 # go to index 3 [10, 69, here, ...]
+PRNT # print ascii of index 3, which is 0 (NUL)
+PRNT !1 # print ascii of index 1, which is the character "E" (69)
+PRNT !0 # print ascii of index 0, which is newline (LF)
+#EXIT # close the program
+anything that is not a keyword is ignored here :), so i can use this super flexible syntax
+first goto 1 then after that prnt !1 which does print the character "E", then of course print a new line by using prnt !0 and exit the script

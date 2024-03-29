@@ -1,0 +1,13 @@
+Hello
+basically anything here is ignored, except those keywords
+im demonstrating how weird this language is, lets start
+#NOTE: the reserved keywords that isnt ignored here are: goto, movr, movl, prnt, prntn, set, input and cls :), also comments are special here#
+
+to print the word "hello", first we need to goto 1 then setting by its ascii value of each character, which is 72, so, set 72 , then continue with the rest, goto 2 then set 101 then goto 3, now we set 108, then lastly, goto 4 and we do set 111 , i forgot about the newline so we can add that by going to a new index which is by goto 5 , and set 10 , finally, we go back to first index by goto 0, and printing each one with prnt !1 , prnt !2 , prnt !3 , and another prnt !3 to make double "l", prnt !4, and newline, prnt !5
+
+for clarity, this is what it will only tokenize and execute, explicitly commented so it dosent execute
+
+# goto 1; set 72; goto 2; set 101; goto 3; set 108; goto 4; set 111; goto 5; set 10; goto 0; prnt !1; prnt !2; prnt !3; prnt !3, prnt !4; prnt !5 #
+
+and yeah, this entire thing above will work just well even its weird
+this is a like a "syntax-less" language, btw, this is a implicit comment
