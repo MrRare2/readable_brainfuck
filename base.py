@@ -286,6 +286,14 @@ class Parser:
                     warn(f"!{nxt.val} has no equivalent command in Brainfuck, this is ignored",UserWarning)
             elif type == TT_PRNTN:
                 warn("prntn has no equivalent command in Brainfuck, this is ignored",UserWarning)
+            elif type == TT_DEL:
+                if self.peek_tok().type == TT_PMARK:
+                    warn(f"!{self.peek_tok().val} has no equivalent command in Brainfuck, this is ignored",UserWarning)
+                bf += "[-]"
+            elif type == TT_INPUT:
+                if self.peek_tok().type == TT_PMARK:
+                    warn(f"!{self.peek_tok().val} has no equivalent command in Brainfuck, this is ignored",UserWarning)
+                bf += ","
             else:
                 pass
 
