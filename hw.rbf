@@ -1,6 +1,1 @@
-# This part is ignored by Brainfuck as well as everything not in the 8 charset #
-SET 72;PRNT;SET 101;PRNT;MOVR;MOVR;SET 108;PRNT;PRNT;MOVL;SET 111;PRNT;MOVL;SET 44;PRNT;SET 32;PRNT;SET 87;PRNT;MOVR;PRNT;MOVL;SET 114;PRNT;MOVR;MOVR;PRNT;MOVL;MOVL;SET 100;PRNT;SET 33;PRNT;SET 10;PRNT;EXIT
-
-for cross compatibility with Brainfuck
-Everything here is ignored by the RBF interpreter
-[-]>[-]<+++++++[>++++++++++<-]>++.<++[>++++++++++<-]>+++++++++.<[>++++++++++<-]>+++++++.<[>----------<-]>.<[>++++++++++<-]>+++.<++++++[>----------<-]>-------.<+[>----------<-]>--.<+++++[>++++++++++<-]>+++++.<++[>++++++++++<-]>++++.<[>++++++++++<-]>+++.<[>----------<-]>------.<[>----------<-]>--------.<++++++[>----------<-]>-------.<++[>----------<-]>---.<
+set 72;prnt;set 101;prnt;set 108;prnt;prnt;set 111;prnt;set 44;prnt;set 32;prnt;set 87;prnt;set 111;prnt;set 114;prnt;set 108;prnt;set 100;prnt;set 33;prnt

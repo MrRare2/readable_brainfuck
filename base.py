@@ -9,6 +9,7 @@ import string
 import sys
 from time import sleep
 from readchar import readchar
+from warnings import warn
 
 alphabet = string.ascii_letters
 digits = string.digits
@@ -244,14 +245,76 @@ class Parser:
                 exit(0)
 
             self.advance_tok()
+    def compile(self):
+        # Don't run if parse() is executed already
+        bf = ""
+        pos = 0
+        tmp = "[-]>[-]<{}[>++++++++++<-]>{}"
+        while self.tok != None:
+            type = self.tok.type
+            if type == TT_SET:
+                nxt = self.peek_tok()
+                if nxt.type == TT_INT:
+                    val = nxt.val % 256
+                    tens = "+" * (val // 10)
+                    ones = "+" * (val % 10)
+                    bf += tmp.format(tens, ones)
+                elif nxt.type == TT_PMARK:
+                    warn(f"!{nxt.val} has no equivalent command in Brainfuck, this is ignored",UserWarning)
+            elif type == TT_R:
+                bf += ">"
+                pos += 1
+            elif type == TT_L:
+                bf += "<"
+                pos -= 1
+            elif type == TT_PRNT:
+                if self.peek_tok().type == TT_PMARK:
+                    warn(f"!{self.peek_tok().val} has no equivalent command in Brainfuck, this is ignored",UserWarning)
+                bf += "."
+            elif type == TT_GOTO:
+                nxt = self.peek_tok()
+                if nxt.type == TT_INT:
+                    val = nxt.val
+                    far = val - pos
+                    if far > 0:
+                        bf += ">" * far
+                        pos += far
+                    elif far < 0:
+                        bf += "<" * abs(far)
+                        pos -= far
+                elif nxt.type == TT_PMARK:
+                    warn(f"!{nxt.val} has no equivalent command in Brainfuck, this is ignored",UserWarning)
+            elif type == TT_PRNTN:
+                warn("prntn has no equivalent command in Brainfuck, this is ignored",UserWarning)
+            else:
+                pass
+
+            if pos < 0:
+                raise IndexError('error: tape memory out of bounds (underrun)\nundershot the tape size of 30000 cells')
+            elif pos >= 30_000:
+                raise IndexError('error: tape memory out of bounds (overrun)\nexceeded the tape size of 30000 cells')
+            self.advance_tok()
+        return bf
+
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
+    compile = False
+    if "--compile" in sys.argv:
+        compile = True
+    if len(sys.argv) > 1 and not compile:
         code = open(sys.argv[1], 'r').read()
         lexer = Lexer(code)
         tokens = lexer.make()
         parser = Parser(tokens)
         parser.parse()
+    elif len(sys.argv) > 2 and compile:
+        compile_ind = sys.argv.index('--compile')
+        code = open(sys.argv[compile_ind + 1 if compile else 1], 'r').read()
+        lexer = Lexer(code)
+        tokens = lexer.make()
+        parser = Parser(tokens)
+        bf = parser.compile()
+        print("Brainfuck:", bf)
     else:
         try:
             t = sys.stdin.read().strip()
@@ -261,6 +324,6 @@ if __name__ == "__main__":
                 lexer = Lexer(t)
                 tokens = lexer.make()
                 parser = Parser(tokens)
-                parser.parse()
+                parser.parse() if not compile else print("Brainfuck:", parser.compile())
         except KeyboardInterrupt:
             pass
