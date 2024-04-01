@@ -1,0 +1,2 @@
+set 0 movr set 0 movl set 6 while movr add add add add add add add add add add movl sub end movr add add add add add prnt
+# Equivalent to [-]>[-]<++++++[>++++++++++<-]>+++++., might be different than --compile #
