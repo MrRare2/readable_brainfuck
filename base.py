@@ -29,6 +29,9 @@ TT_PMARK = "PMARK"
 TT_GOTO = "GOTO"
 TT_PLUS = "PLUS"
 TT_SUB = "SUB"
+TT_MODULO = "MODULO"
+TT_SETSIGN = "SIGNED"
+TT_SETUNSIGN = "UNSIGNED"
 TT_SQLEFT = "SQLEFT"
 TT_SQRIGHT = "SQRIGHT"
 TT_NEWLINE = "NEWLINE"
@@ -48,6 +51,9 @@ KEYWORDS: dict[str, str] = {
     "END": TT_SQRIGHT,
     "ADD": TT_PLUS,
     "SUB": TT_SUB,
+    "MOD": TT_MODULO,
+    "SIGN": TT_SETSIGN,
+    "UNSIGN": TT_SETUNSIGN,
 }
 
 class Token:
@@ -165,7 +171,9 @@ class Parser:
         self.tok: Any[Token, None] = self.tokens[self.pointer_tok]
         # call limit (since we have while loops now)
         self.recursion: int = 0
-        self.limit: int = 65_536
+        self.limit: int = 100_000
+        # sign/unsign integer
+        self.signed = True
 
     def move_right(self) -> None:
         self.pointer += 1
@@ -292,16 +300,25 @@ class Parser:
                 nxt = self.peek_tok()
                 point = self.pointer
                 if nxt.val and nxt.type == TT_PMARK:
-                    self.set(self.find_value(nxt.val)+1, nxt.val)
+                  self.set(self.find_value(nxt.val)+1, nxt.val)
                 else:
                     self.set(self.find_value(self.pointer)+1)
             elif self.tok.type == TT_SUB:
                 nxt = self.peek_tok()
                 point = self.pointer
                 if nxt.val and nxt.type == TT_PMARK:
+                  if self.signed:
                     self.set(self.find_value(nxt.val)-1, nxt.val)
+                  else:
+                    val = self.find_value(nxt.val)
+                    if val > 0:
+                        self.set(val-1, nxt.val)
                 else:
+                  if self.signed:
                     self.set(self.find_value(self.pointer)-1)
+                  else:
+                    if self.find_value(self.pointer) > 0:
+                        self.set(self.find_value(self.pointer)-1)
             elif self.tok.type == TT_SQLEFT:
                 if self.current_value == 0:
                     try:
@@ -311,8 +328,21 @@ class Parser:
                         pass
             elif self.tok.type == TT_SQRIGHT:
                 if self.current_value != 0:
-                    self.pointer_tok = jump_map[self.pointer_tok]
-                    self.tok = self.tokens[self.pointer_tok]
+                    try:
+                        self.pointer_tok = jump_map[self.pointer_tok]
+                        self.tok = self.tokens[self.pointer_tok]
+                    except KeyError:
+                        pass
+            elif self.tok.type == TT_MODULO:
+                nxt = self.peek_tok()
+                if nxt.val and nxt.type == TT_PMARK:
+                    self.set(self.find_value(nxt.val)%256, nxt.val)
+                else:
+                    self.set(self.find_value(self.pointer)%256)
+            elif self.tok.type == TT_SETSIGN:
+                self.signed = True
+            elif self.tok.type == TT_SETUNSIGN:
+                self.signed = False
             elif self.tok.type == TT_EXIT:
                 exit(0)
             if self.recursion >= self.limit:
@@ -376,6 +406,10 @@ class Parser:
                 bf += "["
             elif type == TT_SQRIGHT:
                 bf += "]"
+            elif type == TT_MODULO:
+                if self.peek_tok().type == TT_PMARK:
+                    warn(f"!{self.peek_tok().val} has no equivalent command in Brainfuck, this is ignored",UserWarning)
+                warn(f"mod has no equivalent command in Brainfuck, this is ignored",UserWarning)
             else:
                 pass
 

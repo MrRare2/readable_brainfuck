@@ -1,0 +1,93 @@
+implementation of this thing (from brainfuck)
+temp0[-]
+temp1[-]
+temp2[-]
+temp3[-]
+x[temp0+x-]
+temp0[
+ y[temp1+temp2+y-]
+ temp2[y+temp2-]
+ temp1[
+  temp2+
+  temp0-[temp2[-]temp3+temp0-]
+  temp3[temp0+temp3-]
+  temp2[
+   temp1-
+   [x-temp1[-]]+
+  temp2-]
+ temp1-]
+ x+
+temp0]
+
+# NOTE: this is similar to // integer division
+# code start #
+
+# variables #
+# x # # index 0 #
+set 50
+# y # movr # index 1 #
+set 2
+# if its 0, it will print -1 and exit #
+
+# out # movr # index 2 #
+set 0
+goto 255
+set 10
+movl # "if divisor is zero" value #
+sub # -1 #
+
+### clearing templates start ###
+goto 4 cls movr cls movr cls movr cls movr cls
+### clearing templates end   ###
+
+### if ( y == 0 ) check ###
+# copy index 1(y) to indec 256 for checking #
+goto 1 while goto 256 add goto 259 add goto 1 sub end
+goto 259 while goto 1 add goto 259 sub end
+goto 257 while sub end add # temp0 #
+goto 258 while sub end     # temp1 #
+unsign # go to unsign mode #
+goto 256 while
+  # code1, which is empty #
+  sub !257
+  goto 256 sub
+end
+goto 257 while
+  prntn !254 prnt !255 exit # code2 #
+goto 257 sub end
+sign # back to signed #
+### end ###
+
+# div start # movr # index 3 #
+
+goto 0 while goto 4 # temp0(4) # add goto 0 sub end
+
+goto 4 # temp0(4) #
+while
+  goto 1 while goto 5 add # temp1(5) # goto 6 add # temp2(6) #  goto 1 sub end
+
+  goto 6 while goto 1 add goto 6 sub # temp2(6) # end
+
+  goto 5 # temp1(5) # while
+    goto 6 add # temp2(6) #
+    goto 4 sub while goto 6 while sub end goto 7 # temp3(7) # add goto 4 # temp0(4) # sub end
+    goto 7 while goto 4 add goto 7 sub end
+    goto 6 # temp2(6) # while
+      goto 5 sub # temp1(5) #
+      while goto 0 sub goto 5 while sub end end add
+      goto 6 sub # temp2(6) #
+    end
+    goto 5 sub # temp1(5) #
+  end
+  goto 0 add
+  goto 4
+end
+
+goto 0
+while goto 2 add goto 0 sub end
+goto 1 cls
+movr
+prntn
+goto 255
+prnt
+exit
